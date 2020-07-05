@@ -1,56 +1,25 @@
-import Phaser from 'phaser';
+let canvas, ctx;
+let prevTime, currentTime, dt;
+prevTime = Date.now();
 
-var config = {
-  type: Phaser.AUTO,
-  width: 800,
-  height: 600,
-  backgroundColor: '#2d2d2d',
-  parent: 'phaser-example',
-  scene: {
-      create: create,
-      update: update
-  }
-};
+function update() {
+  currentTime = Date.now();
+  dt = currentTime - prevTime;
+  prevTime = currentTime;
 
-var follower;
-var path;
-var graphics;
+  ctx.clearRect(0,0, canvas.width, canvas.height);
+  ctx.fillRect(canvas.width / 2 + Math.sin(currentTime / 500) * 30, canvas.height / 2 + Math.cos(currentTime / 500) * 30, 10, 10)
 
-var game = new Phaser.Game(config);
-
-function create ()
-{
-  graphics = this.add.graphics();
-
-  follower = { t: 0, vec: new Phaser.Math.Vector2() };
-
-  path = new Phaser.Curves.Path(400, 300);
-
-  path.circleTo(100);
-
-  path.moveTo(400, 300);
-
-  //  Rotate this circle so it completes the loop
-  path.circleTo(100, true, 180);
-
-  this.tweens.add({
-      targets: follower,
-      t: 1,
-      ease: 'Linear',
-      duration: 2000,
-      repeat: -1
-  });
+  requestAnimationFrame(update);
 }
 
-function update ()
-{
-  graphics.clear();
-  graphics.lineStyle(2, 0xffffff, 1);
 
-  path.draw(graphics);
+window.onload = () => {
+  canvas = document.getElementById('game');
+  ctx = canvas.getContext('2d');
 
-  path.getPoint(follower.t, follower.vec);
-
-  graphics.fillStyle(0xff0000, 1);
-  graphics.fillCircle(follower.vec.x, follower.vec.y, 12);
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  
+  requestAnimationFrame(update);
 }
