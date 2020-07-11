@@ -7,8 +7,14 @@ import TextManager from './TextManager';
 
 let assets = {};
 let canvas, ctx, width, height;
+let mouseX = 0;
+let mouseY = 0;
+let mouseHeldKey, mouseDown, mouseIsHolding;
 let prevTime, currentTime, dt;
 prevTime = Date.now();
+
+const keyOffsetX = 0.03;
+const keyOffsetY = 0.09;
 
 let textMan = new TextManager();
 // Init keys
@@ -29,11 +35,46 @@ function loadAssets(loadFunc) {
   });
 }
 
+const SPRITE_SIZE = 64;
+function drawKeySlot(k, isOver) {
+  if (k.isSpace) return; // space bar can never be free hahahaha
+
+  ctx.save();
+
+  ctx.translate(width * (k.startX + keyOffsetX), width * (k.startY + keyOffsetY + 0.001));
+
+  const size = width / 20;
+  let w = size;
+  let h = size;
+
+  const spriteSlot = isOver ? 26 : 25;
+  ctx.drawImage(
+    assets.keySprites,
+    SPRITE_SIZE * spriteSlot, SPRITE_SIZE * 5,
+    SPRITE_SIZE, SPRITE_SIZE,
+    -w / 2, -h / 2,
+    w, h
+  );
+
+  ctx.restore();
+}
+
 function drawKeyboard() {
-  keys.forEach(k => k.draw(ctx, width));
+  keys.forEach(k => {
+    drawKeySlot(k.info, k.isOverHome);
+    if (!k.isFree && !k.isHeld) k.draw(ctx, width);
+  });
+
+  // free keys
+  freeKeys.forEach(k => k.draw(ctx, width));
+
+  if (mouseIsHolding) mouseHeldKey.draw(ctx, width);
 }
 
 function keySort(k1, k2) {
+  // Move a held key to the top
+  if (k1.isHeld) return -1;
+  if (k2.isHeld) return 1;
   return k1.y - k2.y;
 }
 
@@ -79,13 +120,30 @@ function drawTable() {
   
 }
 
+let freeKeys = [];
 function update() {
   currentTime = Date.now();
   dt = currentTime - prevTime;
   prevTime = currentTime;
 
-  keys.forEach(k => k.update(dt));
-  keys.sort(keySort);
+  freeKeys = keys.filter(k => k.isFree);
+  keys.forEach(k => {
+    k.update(dt);
+    let keyThisFrame = false;
+    if (k.isFree && !mouseIsHolding && k.circleCheck(mouseX, mouseY, 0.02)) {
+      k.currentFrame = 'PRESSED';
+    } else {
+      k.currentFrame = 'IDLE';
+    }
+  });
+
+  freeKeys.sort(keySort);
+
+  // the held key
+  if (mouseIsHolding) {
+    mouseHeldKey.x = mouseX;
+    mouseHeldKey.y = mouseY;
+  }
 
   ctx.fillStyle = '#5F5557';
   ctx.fillRect(-1,-1, canvas.width + 10, canvas.height + 10);
@@ -114,7 +172,7 @@ function liftKey(code) {
 }
 
 document.addEventListener('keydown', (e) => {
-  console.log(e);
+  // console.log(e);
   pressKey(e.keyCode);
 });
 
@@ -122,7 +180,6 @@ document.addEventListener('keyup', (e) => {
   // console.log(e);
   liftKey(e.keyCode);
 });
-
 
 window.onload = () => {
   canvas = document.getElementById('game');
@@ -133,13 +190,48 @@ window.onload = () => {
   width = canvas.width;
   height = canvas.height;
 
+  canvas.addEventListener('mousemove', (e) => {
+    const x = e.offsetX / width;
+    const y = e.offsetY / height;
+    mouseX = x;
+    mouseY = y;
+  });
+  
+  canvas.addEventListener('mousedown', (e) => {
+    mouseDown = true;
+    keys.forEach(k => {
+      k.update(dt);
+      let keyThisClick = false;
+      if (!keyThisClick && k.isFree && !mouseIsHolding && k.circleCheck(mouseX, mouseY, 0.02)) {
+        // k.currentFrame = 'PRESSED';
+        // mouseOverKey = k;
+        k.holdKey();
+        mouseIsHolding = true;
+        mouseHeldKey = k;
+      } else {
+        // k.currentFrame = 'IDLE';
+      }
+    });
+  });
+
+  canvas.addEventListener('mouseup', (e) => {
+    if (mouseIsHolding) mouseHeldKey.dropKey();
+    mouseIsHolding = false;
+    mouseDown = false;
+  });
+
+  canvas.addEventListener('mouseleave', (e) => {
+    if (mouseIsHolding) mouseHeldKey.dropKey();
+    mouseIsHolding = false;
+    mouseDown = false;
+  });
+
+
   loadAssets(() => {
     // init keys
     console.log(KEY_MAP);
     // So I don't have to manually tweak values
-    const offsetX = 0.03;
-    const offsetY = 0.09;
-    keys = KEY_MAP.map((k) => new Key(k, assets.keySprites, offsetX, offsetY));
+    keys = KEY_MAP.map((k) => new Key(k, assets.keySprites, keyOffsetX, keyOffsetY));
     requestAnimationFrame(update);
   });
 }

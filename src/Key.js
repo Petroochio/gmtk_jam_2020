@@ -32,6 +32,7 @@ class Key {
     this.holder = holder;
     this.isFree = false;
     this.isPressed = false;
+    this.isOverHome = false;
     this.homeX = this.info.startX + offsetX;
     this.homeY = this.info.startY + offsetY;
     this.x = this.info.startX + offsetX;
@@ -41,13 +42,15 @@ class Key {
     // console.log(this.info);
     this.currentFrame = 'IDLE'; // 'IDLE', 'PRESSED', 'FREE'
 
-    this.breakCount = 5;
+    this.MAX_BREAK = 10;
+    this.breakCount = this.MAX_BREAK;
+    this.numBreaks = 0;
     this.isHeld = false; // like by player hand
     this.isFlying = false;
     this.scaleFactor = 1;
 
     // Change this as time goes on
-    this.speed = 0.003;
+    this.speed = 0.01;
   }
 
   update(dt) {
@@ -58,11 +61,23 @@ class Key {
       if (this.y < BOUNDS.UP && this.moveY < 0) this.moveY *= -1;
       if (this.y > BOUNDS.DOWN && this.moveY > 0) this.moveY *= -1;
 
-      this.x += this.moveX * this.scaleFactor;
-      this.y += this.moveY * this.scaleFactor;
+      this.x += this.moveX * this.scaleFactor * dt / 1000;
+      this.y += this.moveY * this.scaleFactor * dt / 1000;
     }
     
     this.scaleFactor = 1 - lerp(BOUNDS.DOWN, BOUNDS.UP, 0, 0.25, this.y);
+
+    // if (this.isHeld) console.log(this.startX, this.startY, this.x, this.y);
+    if (this.isHeld && this.circleCheck(this.homeX, this.homeY, 0.04)) {
+      this.isOverHome = true;
+    }
+    else this.isOverHome = false;
+  }
+
+  circleCheck(x, y, r) {
+    const dx = x - this.x;
+    const dy = y - this.y;
+    return ((dx * dx) + (dy * dy)) < (r * r);
   }
 
   draw(ctx, canvasSize) {
@@ -87,8 +102,8 @@ class Key {
 
       ctx.drawImage(
         this.sprite,
-        this.info.spriteX + FRAMES[this.currentFrame].x, this.info.spriteY + FRAMES[this.currentFrame].y + 1,
-        SPRITE_SIZE, SPRITE_SIZE - 2,
+        this.info.spriteX + FRAMES[this.currentFrame].x, this.info.spriteY + FRAMES[this.currentFrame].y,
+        SPRITE_SIZE, SPRITE_SIZE,
         -w / 2, -h / 2,
         w, h
       );
@@ -105,6 +120,34 @@ class Key {
     ctx.restore();
   }
 
+  holdKey() {
+    this.isHeld = true;
+    this.isPressed = false;
+    this.currentFrame = 'IDLE';
+  }
+
+  dropKey() {
+    // check if over slot
+    if (this.isOverHome) {
+      this.isFree = false;
+      this.isHeld = false;
+      this.isOverHome = false;
+      this.x = this.homeX;
+      this.y = this.homeY;
+      this.breakCount = this.MAX_BREAK - this.numBreaks;
+      // hard coded max speed
+      if (this.speed < 0.30) this.speed += 0.01;
+    } else {
+      // fit in bounds
+      this.isFree = true;
+      this.isHeld = false;
+      if (this.x < BOUNDS.LEFT) this.x = BOUNDS.LEFT;
+      if (this.x > BOUNDS.RIGHT) this.x = BOUNDS.RIGHT;
+      if (this.y < BOUNDS.UP) this.y = BOUNDS.UP;
+      if (this.y > BOUNDS.DOWN) this.y = BOUNDS.DOWN;
+    }
+  }
+
   press() {
     this.isPressed = true;
     this.currentFrame = 'PRESSED';
@@ -119,6 +162,7 @@ class Key {
 
     if (!this.isFree && this.breakCount <= 0) {
       this.isFree = true;
+      if (this.numBreaks < this.MAX_BREAK - 1) this.numBreaks += 1;
       // spawn on table for now
       this.x = BOUNDS.CENTER_X + (((Math.random() * 2) - 1) * BOUNDS.X_R);
       this.y = BOUNDS.CENTER_Y + (((Math.random() * 2) - 1) * BOUNDS.Y_R);
