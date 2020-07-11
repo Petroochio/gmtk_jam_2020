@@ -1,5 +1,57 @@
+const SPRITE_SIZE = 64;
 const KEY_MAP = [
-  { char: 'r', code: 82, startX: 100, startY: 100, spriteX: 0, spriteY: 0 },
+  { char: '`', code: 192, startX: 3 / 20, startY: 14 / 20, spriteX: 0, spriteY: 0 },
+  { char: '1', code: 49, startX: 4 / 20, startY: 14 / 20, spriteX: SPRITE_SIZE * 4, spriteY: 0 },
+  { char: '2', code: 50, startX: 5 / 20, startY: 14 / 20, spriteX: SPRITE_SIZE * 8, spriteY: 0 },
+  { char: '3', code: 51, startX: 6 / 20, startY: 14 / 20, spriteX: SPRITE_SIZE * 12, spriteY: 0 },
+  { char: '4', code: 52, startX: 7 / 20, startY: 14 / 20, spriteX: SPRITE_SIZE * 16, spriteY: 0 },
+  { char: '5', code: 53, startX: 8 / 20, startY: 14 / 20, spriteX: SPRITE_SIZE * 20, spriteY: 0 },
+  { char: '6', code: 54, startX: 9 / 20, startY: 14 / 20, spriteX: SPRITE_SIZE * 24, spriteY: 0 },
+  { char: '7', code: 55, startX: 10 / 20, startY: 14 / 20, spriteX: SPRITE_SIZE * 28, spriteY: 0 },
+  { char: '8', code: 56, startX: 11 / 20, startY: 14 / 20, spriteX: 0, spriteY: SPRITE_SIZE },
+  { char: '9', code: 57, startX: 12 / 20, startY: 14 / 20, spriteX: SPRITE_SIZE * 4, spriteY: SPRITE_SIZE },
+  { char: '0', code: 48, startX: 13 / 20, startY: 14 / 20, spriteX: SPRITE_SIZE * 8, spriteY: SPRITE_SIZE },
+  { char: '-', code: 173, startX: 14 / 20, startY: 14 / 20, spriteX: SPRITE_SIZE * 12, spriteY: SPRITE_SIZE },
+  { char: '=', code: 61, startX: 15 / 20, startY: 14 / 20, spriteX: SPRITE_SIZE * 16, spriteY: SPRITE_SIZE },
+
+  { char: 'q', code: 81, startX: 4.5 / 20, startY: 14.8 / 20, spriteX: 0, spriteY: SPRITE_SIZE * 3 },
+  { char: 'w', code: 87, startX: 5.5 / 20, startY: 14.8 / 20, spriteX: SPRITE_SIZE * 4, spriteY: SPRITE_SIZE * 3 },
+  { char: 'e', code: 69, startX: 6.5 / 20, startY: 14.8 / 20, spriteX: SPRITE_SIZE * 8, spriteY: SPRITE_SIZE * 3 },
+  { char: 'r', code: 82, startX: 7.5 / 20, startY: 14.8 / 20, spriteX: SPRITE_SIZE * 12, spriteY: SPRITE_SIZE * 3 },
+  { char: 't', code: 84, startX: 8.5 / 20, startY: 14.8 / 20, spriteX: SPRITE_SIZE * 16, spriteY: SPRITE_SIZE * 3 },
+  { char: 'y', code: 89, startX: 9.5 / 20, startY: 14.8 / 20, spriteX: SPRITE_SIZE * 20, spriteY: SPRITE_SIZE * 3 },
+  { char: 'u', code: 85, startX: 10.5 / 20, startY: 14.8 / 20, spriteX: SPRITE_SIZE * 24, spriteY: SPRITE_SIZE * 3 },
+  { char: 'i', code: 73, startX: 11.5 / 20, startY: 14.8 / 20, spriteX: SPRITE_SIZE * 28, spriteY: SPRITE_SIZE * 3 },
+  { char: 'o', code: 79, startX: 12.5 / 20, startY: 14.8 / 20, spriteX: 0, spriteY: SPRITE_SIZE * 4 },
+  { char: 'p', code: 80, startX: 13.5 / 20, startY: 14.8 / 20, spriteX: SPRITE_SIZE * 4, spriteY: SPRITE_SIZE * 4 },
+  { char: '[', code: 219, startX: 14.5 / 20, startY: 14.8 / 20, spriteX: SPRITE_SIZE * 8, spriteY: SPRITE_SIZE * 4 },
+  { char: ']', code: 221, startX: 15.5 / 20, startY: 14.8 / 20, spriteX: SPRITE_SIZE * 12, spriteY: SPRITE_SIZE * 4 },
+
+  { char: 'a', code: 65, startX: 4.75 / 20, startY: 15.6 / 20, spriteX: SPRITE_SIZE * 20, spriteY: SPRITE_SIZE },
+  { char: 's', code: 83, startX: 5.75 / 20, startY: 15.6 / 20, spriteX: SPRITE_SIZE * 24, spriteY: SPRITE_SIZE },
+  { char: 'd', code: 68, startX: 6.75 / 20, startY: 15.6 / 20, spriteX: SPRITE_SIZE * 28, spriteY: SPRITE_SIZE },
+  { char: 'f', code: 70, startX: 7.75 / 20, startY: 15.6 / 20, spriteX: 0, spriteY: SPRITE_SIZE * 2 },
+  { char: 'g', code: 71, startX: 8.75 / 20, startY: 15.6 / 20, spriteX: SPRITE_SIZE * 4, spriteY: SPRITE_SIZE * 2 },
+  { char: 'h', code: 72, startX: 9.75 / 20, startY: 15.6 / 20, spriteX: SPRITE_SIZE * 8, spriteY: SPRITE_SIZE * 2 },
+  { char: 'j', code: 74, startX: 10.75 / 20, startY: 15.6 / 20, spriteX: SPRITE_SIZE * 12, spriteY: SPRITE_SIZE * 2 },
+  { char: 'k', code: 75, startX: 11.75 / 20, startY: 15.6 / 20, spriteX: SPRITE_SIZE * 16, spriteY: SPRITE_SIZE * 2 },
+  { char: 'l', code: 76, startX: 12.75 / 20, startY: 15.6 / 20, spriteX: SPRITE_SIZE * 20, spriteY: SPRITE_SIZE * 2 },
+  { char: ';', code: 59, startX: 13.75 / 20, startY: 15.6 / 20, spriteX: SPRITE_SIZE * 24, spriteY: SPRITE_SIZE * 2 },
+  { char: '"', code: 222, startX: 14.75 / 20, startY: 15.6 / 20, spriteX: SPRITE_SIZE * 28, spriteY: SPRITE_SIZE * 2 },
+
+  { char: 'z', code: 90, startX: 5.25 / 20, startY: 16.4 / 20, spriteX: SPRITE_SIZE * 16, spriteY: SPRITE_SIZE * 4},
+  { char: 'x', code: 88, startX: 6.25 / 20, startY: 16.4 / 20, spriteX: SPRITE_SIZE * 20, spriteY: SPRITE_SIZE * 4},
+  { char: 'c', code: 67, startX: 7.25 / 20, startY: 16.4 / 20, spriteX: SPRITE_SIZE * 24, spriteY: SPRITE_SIZE * 4},
+  { char: 'v', code: 86, startX: 8.25 / 20, startY: 16.4 / 20, spriteX: SPRITE_SIZE * 28, spriteY: SPRITE_SIZE * 4 },
+  { char: 'b', code: 66, startX: 9.25 / 20, startY: 16.4 / 20, spriteX: 0, spriteY: SPRITE_SIZE * 5 },
+  { char: 'n', code: 78, startX: 10.25 / 20, startY: 16.4 / 20, spriteX: SPRITE_SIZE * 4, spriteY: SPRITE_SIZE * 5 },
+  { char: 'm', code: 77, startX: 11.25 / 20, startY: 16.4 / 20, spriteX: SPRITE_SIZE * 8, spriteY: SPRITE_SIZE * 5 },
+  { char: ',', code: 188, startX: 12.25 / 20, startY: 16.4 / 20, spriteX: SPRITE_SIZE * 12, spriteY: SPRITE_SIZE * 5 },
+  { char: '.', code: 190, startX: 13.25 / 20, startY: 16.4 / 20, spriteX: SPRITE_SIZE * 16, spriteY: SPRITE_SIZE * 5 },
+  { char: '/', code: 191, startX: 14.25 / 20, startY: 16.4 / 20, spriteX: SPRITE_SIZE * 20, spriteY: SPRITE_SIZE * 5 },
+
+  // space is a little special
+  { char: ' ', code: 32, startX: 9.4 / 20, startY: 17.2 / 20, spriteX: 0, spriteY: SPRITE_SIZE * 6, isSpace: true },
 ];
 
 export default KEY_MAP;

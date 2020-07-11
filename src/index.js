@@ -59,7 +59,7 @@ function liftKey(code) {
 }
 
 document.addEventListener('keydown', (e) => {
-  // console.log(e);
+  console.log(e);
   pressKey(e.keyCode);
 });
 
@@ -78,9 +78,9 @@ window.onload = () => {
   width = canvas.width;
   height = canvas.height;
 
-  console.log('ye');
   loadAssets(() => {
     // init keys
+    console.log(KEY_MAP);
     keys = KEY_MAP.map((k) => new Key(k, assets.keySprites));
     requestAnimationFrame(update);
   });
