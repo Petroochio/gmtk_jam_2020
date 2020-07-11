@@ -3,12 +3,14 @@ import ASSET_SOURCES from './AssetSources';
 import KEY_MAP from './KeyMap';
 
 import Key from './Key';
+import TextManager from './TextManager';
 
 let assets = {};
 let canvas, ctx, width, height;
 let prevTime, currentTime, dt;
 prevTime = Date.now();
 
+let textMan = new TextManager();
 // Init keys
 let keys;
 
@@ -54,8 +56,11 @@ function pressKey(code) {
 }
 
 function liftKey(code) {
-  const key = keys.find(k => k.code === code);
-  if (key) key.lift();
+  const key = keys.find(k => (k.code === code && !k.isFree));
+  if (key) {
+    key.lift();
+    textMan.sendKey(key);
+  }
 }
 
 document.addEventListener('keydown', (e) => {
