@@ -42,19 +42,40 @@ class Key {
     // console.log(this.info);
     this.currentFrame = 'IDLE'; // 'IDLE', 'PRESSED', 'FREE'
 
-    this.MAX_BREAK = 9;
+    this.MAX_BREAK = 8;
     this.breakCount = this.MAX_BREAK;
     this.numBreaks = 0;
     this.isHeld = false; // like by player hand
     this.isFlying = false;
     this.scaleFactor = 1;
-
+    this.wiggleFrame = 0;
+    this.wiggleDirection = 1;
+    this.wiggleTimer = 1 / 12;
+    this.freeWiggleRate = 1 / 8;
+    this.breakWiggleRate = 1 / 60;
     // Change this as time goes on
-    this.speed = 0.01;
+    this.speed = 0.03;
   }
 
   update(dt) {
+    this.wiggleTimer -= dt / 1000;
+
+    // this aint dry but.... whatever
+    if (!this.isFree && !this.isHeld && this.breakCount <= 1) {
+      if (this.wiggleTimer <= 0) {
+        this.wiggleTimer = this.breakWiggleRate;
+        this.wiggleFrame += this.wiggleDirection;
+        if (this.wiggleFrame > 1 || this.wiggleFrame < -1) this.wiggleDirection *= -1;
+      }
+    }
+
     if (this.isFree) {
+      if (this.wiggleTimer <= 0) {
+        this.wiggleTimer = this.freeWiggleRate;
+        this.wiggleFrame += this.wiggleDirection;
+        if (this.wiggleFrame > 1 || this.wiggleFrame < -1) this.wiggleDirection *= -1;
+      }
+    
       // check bounds
       if (this.x < BOUNDS.LEFT && this.moveX < 0) this.moveX *= -1;
       if (this.x > BOUNDS.RIGHT && this.moveX > 0) this.moveX *= -1;
@@ -66,6 +87,8 @@ class Key {
     }
     
     this.scaleFactor = 1 - lerp(BOUNDS.DOWN, BOUNDS.UP, 0, 0.25, this.y);
+
+
 
     // if (this.isHeld) console.log(this.startX, this.startY, this.x, this.y);
     if (this.isHeld && this.circleCheck(this.homeX, this.homeY, 0.04)) {
@@ -85,7 +108,6 @@ class Key {
 
     ctx.translate(canvasSize * this.x, canvasSize * this.y);
     if (this.isPressed && !this.isFree) ctx.translate(0, canvasSize * 0.005);
-    ctx.rotate(0);
 
     const size = canvasSize / 20;
     // space is 6 times the width of regular keys
@@ -98,6 +120,25 @@ class Key {
       if (this.isFree && this.y < BOUNDS.DOWN) {
         w *= this.scaleFactor;
         h *= this.scaleFactor;
+
+        ctx.save();
+        if (this.isHeld) ctx.translate(0, size * 1);
+        // shadow
+        ctx.fillStyle = 'rgba(0,0,0,0.5)';
+        ctx.beginPath();
+        ctx.arc(0, 0, size * 0.3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // rotate after shadow
+      if (this.isFree && !this.isHeld) {
+        ctx.translate(0, size * -0.25);
+        ctx.rotate(0.20 * this.wiggleFrame);
+      }
+
+      if (!this.isFree && !this.isHeld && this.breakCount <= 1) {
+        ctx.rotate(0.05 * this.wiggleFrame);
       }
 
       ctx.drawImage(
@@ -162,7 +203,7 @@ class Key {
 
     if (!this.isFree && this.breakCount <= 0) {
       this.isFree = true;
-      if (this.numBreaks < this.MAX_BREAK - 1) this.numBreaks += 1;
+      if (this.numBreaks < this.MAX_BREAK - 3) this.numBreaks += 1;
       // spawn on table for now
       this.x = BOUNDS.CENTER_X + (((Math.random() * 2) - 1) * BOUNDS.X_R);
       this.y = BOUNDS.CENTER_Y + (((Math.random() * 2) - 1) * BOUNDS.Y_R);

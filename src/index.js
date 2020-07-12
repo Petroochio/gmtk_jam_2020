@@ -238,8 +238,8 @@ window.onload = () => {
 
   loadAssets(() => {
     // init keys
-    console.log(KEY_MAP);
-    // So I don't have to manually tweak values
+    // console.log(KEY_MAP);
+    // So I don't have to manually tweak position values
     keys = KEY_MAP.map((k) => new Key(k, assets.keySprites, keyOffsetX, keyOffsetY));
     requestAnimationFrame(update);
   });
