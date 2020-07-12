@@ -166,17 +166,23 @@ function pressKey(code) {
 
 function liftKey(e) {
   const code = e.keyCode;
-  console.log(e);
   const key = keys.find(k => (k.code === code && !k.isFree));
   if (key) {
     key.lift();
-    textMan.sendKey(e);
+    // textMan.sendKey(e);
   }
 }
 
 document.addEventListener('keydown', (e) => {
   // console.log(e);
   pressKey(e.keyCode);
+});
+
+document.addEventListener('keypress', (e) => {
+  var keynum = e.which;
+  var c = String.fromCharCode(keynum).toLowerCase();
+  const key = keys.find(k => (k.char === c && !k.isFree && !k.isHeld));
+  if (key) textMan.sendKey(e);
 });
 
 document.addEventListener('keyup', (e) => {

@@ -42,7 +42,7 @@ class Key {
     // console.log(this.info);
     this.currentFrame = 'IDLE'; // 'IDLE', 'PRESSED', 'FREE'
 
-    this.MAX_BREAK = 10;
+    this.MAX_BREAK = 9;
     this.breakCount = this.MAX_BREAK;
     this.numBreaks = 0;
     this.isHeld = false; // like by player hand

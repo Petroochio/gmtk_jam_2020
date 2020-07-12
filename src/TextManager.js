@@ -48,7 +48,7 @@ class TextManager {
     var key = String.fromCharCode(keynum).toLowerCase();
 
     // HERE BE EDGE CASES
-    if (keynum === 189) key = '-';
+    // if (keynum === 189) key = '-';
 
     var letter = this.text[this.currentLine][this.currentLetter].toLowerCase();
     if(key == letter){
