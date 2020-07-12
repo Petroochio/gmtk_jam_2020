@@ -61,6 +61,8 @@ class Key {
     this.heldWiggleRate = 1 / 60;
     // Change this as time goes on
     this.speed = 0.03;
+    this.flyTrail = [];
+    this.trailLength = 10;
   }
 
   update(dt) {
@@ -131,21 +133,39 @@ class Key {
 
   draw(ctx, canvasSize) {
     ctx.save();
+    const size = canvasSize / 20;
+
+    // draw the trail
+    this.flyTrail.forEach((t, i) => {
+      ctx.save();
+      ctx.translate(canvasSize * t[0], canvasSize * t[1]);
+      ctx.fillStyle = `rgba(0,0,0, ${0.1 + (i / this.trailLength) * 0.5})`;
+      ctx.beginPath();
+      ctx.arc(0,0, size * (0.01 + (i / this.trailLength) * 0.3), 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.restore();
+    });
+
+    // trim fly trail
+    if (this.flyTrail.length > this.trailLength || !this.isFlying) this.flyTrail.shift();
 
     if (this.isFlying) {
       const r = this.flyTime / (this.FLY_MAX);
       const r2 = r * r;
-      let fx = this.homeX + (this.targetX - this.homeX) * this.flyTime / (this.FLY_MAX); //lerp(this.homeX, this.targetX, 0, this.FLY_MAX, this.flyTime);
-      let fy = this.homeY + (this.targetY - this.homeY) * this.flyTime / (this.FLY_MAX); // const fy = lerp(this.homeY, this.targetY, 0, this.FLY_MAX, this.flyTime);
+      let fx = this.homeX + (this.targetX - this.homeX) * r; //lerp(this.homeX, this.targetX, 0, this.FLY_MAX, this.flyTime);
+      let fy = this.homeY + (this.targetY - this.homeY) * r; // const fy = lerp(this.homeY, this.targetY, 0, this.FLY_MAX, this.flyTime);
       if (this.homeX < 0.5) fx -= 0.1 * Math.sin(r2 * Math.PI);
       else if (this.homeX >= 0.5) fx += 0.1 * Math.sin(r2 * Math.PI);
+
+      this.flyTrail.push([fx, fy]);
+
       ctx.translate(canvasSize * fx, canvasSize * fy);
     }
     else ctx.translate(canvasSize * this.x, canvasSize * this.y);
     
     if (this.isPressed && !this.isFree) ctx.translate(0, canvasSize * 0.005);
 
-    const size = canvasSize / 20;
     // space is 6 times the width of regular keys
     const spaceW = size * 6;
     if (!this.info.isSpace) {
