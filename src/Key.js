@@ -278,7 +278,7 @@ class Key {
     if (!this.isFree && this.breakCount <= 0) {
       // this.isFree = true;
       this.isFlying = true;
-      if (this.numBreaks < this.MAX_BREAK - 4) this.numBreaks += 1;
+      if (this.numBreaks < this.MAX_BREAK - 2) this.numBreaks += 1;
       // spawn on table for now
       this.flyTime = 0;
       this.targetX = BOUNDS.CENTER_X + (((Math.random() * 2) - 1) * BOUNDS.X_R);
