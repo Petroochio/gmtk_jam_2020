@@ -5,6 +5,8 @@ import KEY_MAP from './KeyMap';
 import Key from './Key';
 import TextManager from './TextManager';
 
+let gameState = 'MAIN';
+
 let assets = {};
 let canvas, ctx, width, height;
 let mouseX = 0;
@@ -124,6 +126,13 @@ function drawTable() {
 let freeKeys = [];
 function mainUpdate(dt, currentTime) {
   textMan.update(dt);
+  if (textMan.isEnd()) {
+    gameState = 'END';
+    // set html
+    // special case for if they got through the whole thing O.O
+    // trigger div animate up
+  }
+
   freeKeys = keys.filter(k => k.isFree);
   keys.forEach(k => {
     k.update(dt);
@@ -165,7 +174,14 @@ function update() {
   dt = currentTime - prevTime;
   prevTime = currentTime;
 
-  mainUpdate(dt, currentTime);
+  switch (gameState) {
+    case 'MAIN':
+      mainUpdate(dt, currentTime);
+      break;
+    case 'END':
+      console.log('end mang');
+    default: break;
+  }
 
   requestAnimationFrame(update);
 }

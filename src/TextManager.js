@@ -17,10 +17,19 @@ class TextManager {
     this.blinkTime = 0.7;
     this.blinkOn = true;
     
-    
+    this.lineTime = 0;
+    this.lineTimeMax = 40; // 40, how many lines total are there?
+    this.MIN_LINE_TIME_MAX = 20;
+    this.lineBlinkTime = 0.7;
+    this.lineBlinkOn = true;
+
     this.leftX = this.LEFT_END;
     this.highlightX = this.LEFT_END;
     this.highlightY = -this.TEXT_SIZE;
+  }
+
+  isEnd() {
+    return this.lineTime > this.lineTimeMax;
   }
 
   update(deltaTime) {
@@ -31,9 +40,25 @@ class TextManager {
       this.blinkOn = !this.blinkOn;
       this.blinkTime = this.blinkOn ? 0.8 : 0.2; 
     }
+
+    this.lineTime += dt;
+    this.lineBlinkTime -= dt;
+    if (this.lineBlinkTime < 0) {
+      this.lineBlinkOn = !this.lineBlinkOn;
+      this.lineBlinkTime = this.lineBlinkOn ? 0.4 + (0.8 * (1 - this.lineTime / this.lineTimeMax)) : 0.1 + (0.3 * (1 - this.lineTime / this.lineTimeMax)); 
+    }
   }
 
   draw(ctx, canvasSize) {
+    ctx.save();
+    const left = this.leftX - 0.5;
+    ctx.translate(0.5 * canvasSize, (this.CUT_OFF + 0.01) * canvasSize);
+    ctx.fillStyle = this.lineBlinkOn ? '#000000' : '#aaaaaa';
+    // console.log(left);
+    const lw = 0.6 * canvasSize * ((0.8 * (1 - this.lineTime / this.lineTimeMax)));
+    ctx.fillRect(left * canvasSize, 0, lw, 0.002 * canvasSize);
+    ctx.restore();
+
     ctx.fillStyle = 'rgba(255, 157, 66, 0.5)';
     if (this.blinkOn) ctx.fillRect(this.highlightX * canvasSize, (this.txtY + this.highlightY) * canvasSize, this.TEXT_WIDTH * canvasSize, this.TEXT_SIZE * canvasSize);
     ctx.font = `${this.TEXT_SIZE * canvasSize}px IBM Plex Mono`;
@@ -48,6 +73,7 @@ class TextManager {
       ctx.fillText(this.text[i], this.leftX * canvasSize, lineY * canvasSize);
     }
     ctx.restore();
+
     // ctx.fillStyle = 'white';
     // ctx.fillRect(0, 250, width, 200);
     // ctx.fillStyle = 'rgba(255,255,255,.6)';
@@ -74,6 +100,10 @@ class TextManager {
       this.currentLetter = 0;
       this.highlightX = this.leftX;
       this.highlightY += this.LINE_INCREMENT;
+
+      this.lineTimeMax -= 0.3;
+      if (this.lineTimeMax < this.MIN_LINE_TIME_MAX) this.lineTimeMax = this.MIN_LINE_TIME_MAX;
+      this.lineTime = 0;
     }
   }
 }
