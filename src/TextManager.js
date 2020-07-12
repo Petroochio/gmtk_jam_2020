@@ -6,7 +6,7 @@ class TextManager {
 
     this.currentLine = 0;
     this.currentLetter = 0;
-    this.txtY = 300 / 780;
+    this.txtY = 330 / 780;
     this.currentLetter = 0;
     this.LEFT_END = 150 / 780;
     this.TEXT_SIZE = 20 / 780;
@@ -14,6 +14,8 @@ class TextManager {
     this.LINE_INCREMENT = 30 / 780;
     this.TEXT_WIDTH = 12 / 780;
     this.CUT_OFF = 340 / 780;
+    this.blinkTime = 0.7;
+    this.blinkOn = true;
     
     
     this.leftX = this.LEFT_END;
@@ -21,9 +23,19 @@ class TextManager {
     this.highlightY = -this.TEXT_SIZE;
   }
 
+  update(deltaTime) {
+    const dt = deltaTime / 1000;
+
+    this.blinkTime -= dt;
+    if (this.blinkTime < 0) {
+      this.blinkOn = !this.blinkOn;
+      this.blinkTime = this.blinkOn ? 0.8 : 0.2; 
+    }
+  }
+
   draw(ctx, canvasSize) {
     ctx.fillStyle = 'rgba(255, 157, 66, 0.5)';
-    ctx.fillRect(this.highlightX * canvasSize, (this.txtY + this.highlightY) * canvasSize, this.TEXT_WIDTH * canvasSize, this.TEXT_SIZE * canvasSize);
+    if (this.blinkOn) ctx.fillRect(this.highlightX * canvasSize, (this.txtY + this.highlightY) * canvasSize, this.TEXT_WIDTH * canvasSize, this.TEXT_SIZE * canvasSize);
     ctx.font = `${this.TEXT_SIZE * canvasSize}px monospace`;
     ctx.save();
     ctx.beginPath();

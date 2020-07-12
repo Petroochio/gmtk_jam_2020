@@ -32,6 +32,10 @@ class Key {
     this.holder = holder;
     this.isFree = false;
     this.isPressed = false;
+    this.isFailedPress = false;
+    this.failedParticleStart = false;
+    this.landParticleStart = false;
+
     this.isOverHome = false;
     this.homeX = this.info.startX + offsetX;
     this.homeY = this.info.startY + offsetY;
@@ -47,7 +51,7 @@ class Key {
 
     this.FLY_MAX = 1;
 
-    this.MAX_BREAK = 8;
+    this.MAX_BREAK = 9;
     this.breakCount = this.MAX_BREAK;
     this.numBreaks = 0;
     this.isHeld = false; // like by player hand
@@ -110,8 +114,8 @@ class Key {
       if (this.y < BOUNDS.UP && this.moveY < 0) this.moveY *= -1;
       if (this.y > BOUNDS.DOWN && this.moveY > 0) this.moveY *= -1;
 
-      this.x += this.moveX * this.scaleFactor * dt / 1000;
-      this.y += this.moveY * this.scaleFactor * dt / 1000;
+      // this.x += this.moveX * this.scaleFactor * dt / 1000;
+      // this.y += this.moveY * this.scaleFactor * dt / 1000;
     }
     
     this.scaleFactor = 1 - lerp(BOUNDS.DOWN, BOUNDS.UP, 0, 0.25, this.y);
@@ -119,8 +123,9 @@ class Key {
 
 
     // if (this.isHeld) console.log(this.startX, this.startY, this.x, this.y);
-    if (this.isHeld && this.circleCheck(this.homeX, this.homeY, 0.04)) {
+    if (this.isHeld && this.circleCheck(this.homeX, this.homeY, 0.1)) {
       this.isOverHome = true;
+      // this.dropKey();
     }
     else this.isOverHome = false;
   }
@@ -249,6 +254,14 @@ class Key {
     }
   }
 
+  falsePress() {
+    this.isFailedPress = true;
+  }
+
+  falseLift() {
+    this.isFailedPress = false;
+  }
+
   press() {
     this.isPressed = true;
     this.currentFrame = 'PRESSED';
@@ -256,6 +269,7 @@ class Key {
 
   lift() {
     this.isPressed = false;
+    this.isFailedPress = false;
     this.currentFrame = 'IDLE';
 
     // Again, space is special
@@ -264,7 +278,7 @@ class Key {
     if (!this.isFree && this.breakCount <= 0) {
       // this.isFree = true;
       this.isFlying = true;
-      if (this.numBreaks < this.MAX_BREAK - 3) this.numBreaks += 1;
+      if (this.numBreaks < this.MAX_BREAK - 4) this.numBreaks += 1;
       // spawn on table for now
       this.flyTime = 0;
       this.targetX = BOUNDS.CENTER_X + (((Math.random() * 2) - 1) * BOUNDS.X_R);

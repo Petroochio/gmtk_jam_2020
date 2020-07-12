@@ -11,6 +11,7 @@ let mouseX = 0;
 let mouseY = 0;
 let mouseHeldKey, mouseDown, mouseIsHolding;
 let prevTime, currentTime, dt;
+let mouseDist = 0.06;
 prevTime = Date.now();
 
 const keyOffsetX = 0.03;
@@ -36,18 +37,19 @@ function loadAssets(loadFunc) {
 }
 
 const SPRITE_SIZE = 64;
-function drawKeySlot(k, isOver) {
+function drawKeySlot(k, isOver, isPressed, isFalsePress) {
   if (k.isSpace) return; // space bar can never be free hahahaha
 
   ctx.save();
-
-  ctx.translate(width * (k.startX + keyOffsetX), width * (k.startY + keyOffsetY + 0.001));
 
   const size = width / 20;
   let w = size;
   let h = size;
 
-  const spriteSlot = isOver ? 26 : 25;
+  ctx.translate(width * (k.startX + keyOffsetX), width * (k.startY + keyOffsetY + 0.001));
+  if (isPressed || isFalsePress) ctx.translate(0, size * 0.12);
+
+  const spriteSlot = 25; // isOver || isFalsePress ? 26 : 25;
   ctx.drawImage(
     assets.keySprites,
     SPRITE_SIZE * spriteSlot, SPRITE_SIZE * 5,
@@ -61,7 +63,7 @@ function drawKeySlot(k, isOver) {
 
 function drawKeyboard() {
   keys.forEach(k => {
-    drawKeySlot(k.info, k.isOverHome);
+    drawKeySlot(k.info, k.isOverHome, k.isPressed, k.isFailedPress);
     if (!k.isFree && !k.isHeld) k.draw(ctx, width);
   });
 
@@ -117,8 +119,6 @@ function drawTable() {
   // ctx.moveTo(0, height * 13 / 20);
   // ctx.lineTo(width, height * 13 / 20);
   // ctx.stroke();
-
-  
 }
 
 let freeKeys = [];
@@ -127,11 +127,12 @@ function update() {
   dt = currentTime - prevTime;
   prevTime = currentTime;
 
+  textMan.update(dt);
   freeKeys = keys.filter(k => k.isFree);
   keys.forEach(k => {
     k.update(dt);
     let keyThisFrame = false;
-    if (k.isFree && !mouseIsHolding && k.circleCheck(mouseX, mouseY, 0.02)) {
+    if (k.isFree && !mouseIsHolding && k.circleCheck(mouseX, mouseY, mouseDist)) {
       k.currentFrame = 'PRESSED';
     } else {
       k.currentFrame = 'IDLE';
@@ -142,8 +143,14 @@ function update() {
 
   // the held key
   if (mouseIsHolding) {
-    mouseHeldKey.x = mouseX;
-    mouseHeldKey.y = mouseY;
+    if (mouseHeldKey.isOverHome) {
+      mouseHeldKey.dropKey();
+      mouseIsHolding = false;
+      mouseDown = false;
+    } else {
+      mouseHeldKey.x = mouseX;
+      mouseHeldKey.y = mouseY;
+    }
   }
 
   ctx.fillStyle = '#5F5557';
@@ -160,17 +167,21 @@ function update() {
 }
 
 function pressKey(code) {
-  const key = keys.find(k => (k.code === code && !k.isFree && !k.isFlying));
-  if (key) key.press();
+  const key = keys.find(k => (k.code === code));
+  if (key && !key.isFree && !key.isFlying && !key.isHeld) {
+    key.press();
+  }
+  else if (key) key.falsePress();
 }
 
 function liftKey(e) {
   const code = e.keyCode;
-  const key = keys.find(k => (k.code === code && !k.isFree && !k.isFlying));
-  if (key) {
+  const key = keys.find(k => (k.code === code));
+
+  if (key && !key.isFree && !key.isFlying && !key.isHeld) {
     key.lift();
-    // textMan.sendKey(e);
   }
+  else if (key) key.falseLift();
 }
 
 document.addEventListener('keydown', (e) => {
@@ -212,7 +223,7 @@ window.onload = () => {
     keys.forEach(k => {
       k.update(dt);
       let keyThisClick = false;
-      if (!keyThisClick && k.isFree && !mouseIsHolding && k.circleCheck(mouseX, mouseY, 0.02)) {
+      if (!keyThisClick && k.isFree && !mouseIsHolding && k.circleCheck(mouseX, mouseY, mouseDist)) {
         // k.currentFrame = 'PRESSED';
         // mouseOverKey = k;
         k.holdKey();
@@ -225,7 +236,7 @@ window.onload = () => {
   });
 
   canvas.addEventListener('mouseup', (e) => {
-    if (mouseIsHolding) mouseHeldKey.dropKey();
+    // if (mouseIsHolding) mouseHeldKey.dropKey();
     mouseIsHolding = false;
     mouseDown = false;
   });
