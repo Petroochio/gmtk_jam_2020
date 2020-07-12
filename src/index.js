@@ -132,13 +132,17 @@ function mainUpdate(dt, currentTime) {
     const endDiv = document.querySelector('.end');
     const endBox = document.querySelector('.manifesto-text');
     endBox.innerHtml = ''; //textMan.currentLine
-    for (let i = 0; i < 300; i++) {
-      endBox.innerHTML += ' ' + textMan.text[0];
+    for (let i = 0; i <text.currentLine; i++) {
+      endBox.innerHTML += ' ' + textMan.text[i];
     }
     endBox.innerHTML += ' ' + textMan.text[textMan.currentLine].substring(0, textMan.currentLetter);
     // special case for if they got through the whole thing O.O
+    if (textMan.currentLine >= textMan.text.length - 1) {
+      document.querySelector('.end-message').innerHTML = "You Finished the Manifesto!"
+    }
     // trigger div animate up
     endDiv.classList.add('end-show');
+    endDiv.classList.remove('hidden');
   }
 
   freeKeys = keys.filter(k => k.isFree);

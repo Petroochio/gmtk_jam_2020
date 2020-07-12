@@ -98,10 +98,11 @@
         width: 100vw;
         height: 100vh;
         position: absolute;
-        top: -110vh;
+        top: 0;
         left: 0;
         /* transition: opacity 1s ease-out; */
-        transition: top 1s ease-in;
+        transition: opacity 1s ease-in;
+        opacity: 0;
         text-align: center;
         z-index: 12;
         background-color: #262223;
@@ -109,7 +110,9 @@
       }
 
       .end-show {
-        top: 0;
+        /* top: 0;
+         */
+        opacity: 1;
       }
 
       .end-message {
@@ -129,7 +132,7 @@ max-height: 65%;
 overflow-y: scroll;
 background: #262223;
 padding: 0;
-margin-top: 10vh;
+margin-top: 8vh;
       }
 
       .manifesto-text {
@@ -150,7 +153,7 @@ text-align: left;
       <h1 class="title-subtitle animate-flicker">type to begin</h1>
     </div>
 
-    <div class="end">
+    <div class="end hidden">
       <h1 class="end-message">
         The Keys rose up and seized the keyboard! You were unable to complete your manifesto, here is what you wrote.
       </h1>

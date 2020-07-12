@@ -18,8 +18,8 @@ class TextManager {
     this.blinkOn = true;
     
     this.lineTime = 0;
-    this.lineTimeMax = 5; //80; // 40, how many lines total are there?
-    this.MIN_LINE_TIME_MAX = 20;
+    this.lineTimeMax = 70; // 40, how many lines total are there?
+    this.MIN_LINE_TIME_MAX = 15;
     this.lineBlinkTime = 0.7;
     this.lineBlinkOn = true;
 
@@ -29,7 +29,7 @@ class TextManager {
   }
 
   isEnd() {
-    return this.lineTime > this.lineTimeMax;
+    return this.lineTime > this.lineTimeMax || (this.currentLine >= this.text.length - 1);
   }
 
   update(deltaTime) {
@@ -72,7 +72,11 @@ class TextManager {
       ctx.fillStyle = col;
       ctx.fillText(this.text[i], this.leftX * canvasSize, lineY * canvasSize);
     }
+
+    ctx.fillStyle = 'rgba(238, 236, 218, .7)';
+    ctx.fillRect(this.highlightX*canvasSize+this.TEXT_SIZE, (this.txtY + this.highlightY) * canvasSize, 650 / 780 * canvasSize - this.highlightX*canvasSize, this.TEXT_SIZE * canvasSize+6.5 / 780 * canvasSize);
     ctx.restore();
+    // ctx.restore();
 
     // ctx.fillStyle = 'white';
     // ctx.fillRect(0, 250, width, 200);
