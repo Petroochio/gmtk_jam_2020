@@ -160,13 +160,13 @@ function update() {
 }
 
 function pressKey(code) {
-  const key = keys.find(k => (k.code === code && !k.isFree));
+  const key = keys.find(k => (k.code === code && !k.isFree && !k.isFlying));
   if (key) key.press();
 }
 
 function liftKey(e) {
   const code = e.keyCode;
-  const key = keys.find(k => (k.code === code && !k.isFree));
+  const key = keys.find(k => (k.code === code && !k.isFree && !k.isFlying));
   if (key) {
     key.lift();
     // textMan.sendKey(e);
@@ -181,6 +181,7 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('keypress', (e) => {
   var keynum = e.which;
   var c = String.fromCharCode(keynum).toLowerCase();
+  if (c === ':') c = ';';
   const key = keys.find(k => (k.char === c && !k.isFree && !k.isHeld));
   if (key) textMan.sendKey(e);
 });

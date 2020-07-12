@@ -39,8 +39,13 @@ class Key {
     this.y = this.info.startY + offsetY;
     this.moveX = 0;
     this.moveY = 0;
+    this.targetX = this.x;
+    this.targetY = this.y;
+
     // console.log(this.info);
     this.currentFrame = 'IDLE'; // 'IDLE', 'PRESSED', 'FREE'
+
+    this.FLY_MAX = 1;
 
     this.MAX_BREAK = 8;
     this.breakCount = this.MAX_BREAK;
@@ -53,6 +58,7 @@ class Key {
     this.wiggleTimer = 1 / 12;
     this.freeWiggleRate = 1 / 8;
     this.breakWiggleRate = 1 / 60;
+    this.heldWiggleRate = 1 / 60;
     // Change this as time goes on
     this.speed = 0.03;
   }
@@ -60,8 +66,19 @@ class Key {
   update(dt) {
     this.wiggleTimer -= dt / 1000;
 
+    if (this.isFlying) {
+      this.flyTime += dt / 1000;
+
+      if (this.flyTime >= this.FLY_MAX) {
+        this.isFlying = false;
+        this.isFree = true;
+        this.x = this.targetX;
+        this.y = this.targetY;
+      }
+    }
+
     // this aint dry but.... whatever
-    if (!this.isFree && !this.isHeld && this.breakCount <= 1) {
+    if (!this.isFree && !this.isHeld && !this.isFlying && this.breakCount <= 1) {
       if (this.wiggleTimer <= 0) {
         this.wiggleTimer = this.breakWiggleRate;
         this.wiggleFrame += this.wiggleDirection;
@@ -69,8 +86,17 @@ class Key {
       }
     }
 
-    if (this.isFree) {
+    if (this.isHeld) {
       if (this.wiggleTimer <= 0) {
+        this.wiggleTimer = this.heldWiggleRate;
+        this.wiggleFrame += this.wiggleDirection;
+        if (this.wiggleFrame < 0) this.wiggleDirection = 1;
+        if (this.wiggleFrame > 0) this.wiggleDirection = -1;
+      }
+    }
+
+    if (this.isFree) {
+      if (!this.isHeld && this.wiggleTimer <= 0) {
         this.wiggleTimer = this.freeWiggleRate;
         this.wiggleFrame += this.wiggleDirection;
         if (this.wiggleFrame > 1 || this.wiggleFrame < -1) this.wiggleDirection *= -1;
@@ -106,7 +132,17 @@ class Key {
   draw(ctx, canvasSize) {
     ctx.save();
 
-    ctx.translate(canvasSize * this.x, canvasSize * this.y);
+    if (this.isFlying) {
+      const r = this.flyTime / (this.FLY_MAX);
+      const r2 = r * r;
+      let fx = this.homeX + (this.targetX - this.homeX) * this.flyTime / (this.FLY_MAX); //lerp(this.homeX, this.targetX, 0, this.FLY_MAX, this.flyTime);
+      let fy = this.homeY + (this.targetY - this.homeY) * this.flyTime / (this.FLY_MAX); // const fy = lerp(this.homeY, this.targetY, 0, this.FLY_MAX, this.flyTime);
+      if (this.homeX < 0.5) fx -= 0.1 * Math.sin(r2 * Math.PI);
+      else if (this.homeX >= 0.5) fx += 0.1 * Math.sin(r2 * Math.PI);
+      ctx.translate(canvasSize * fx, canvasSize * fy);
+    }
+    else ctx.translate(canvasSize * this.x, canvasSize * this.y);
+    
     if (this.isPressed && !this.isFree) ctx.translate(0, canvasSize * 0.005);
 
     const size = canvasSize / 20;
@@ -135,6 +171,10 @@ class Key {
       if (this.isFree && !this.isHeld) {
         ctx.translate(0, size * -0.25);
         ctx.rotate(0.20 * this.wiggleFrame);
+      }
+
+      if (this.isHeld) {
+        ctx.rotate(0.15 * this.wiggleFrame);
       }
 
       if (!this.isFree && !this.isHeld && this.breakCount <= 1) {
@@ -202,11 +242,13 @@ class Key {
     if (!this.info.isSpace) this.breakCount -= 1;
 
     if (!this.isFree && this.breakCount <= 0) {
-      this.isFree = true;
+      // this.isFree = true;
+      this.isFlying = true;
       if (this.numBreaks < this.MAX_BREAK - 3) this.numBreaks += 1;
       // spawn on table for now
-      this.x = BOUNDS.CENTER_X + (((Math.random() * 2) - 1) * BOUNDS.X_R);
-      this.y = BOUNDS.CENTER_Y + (((Math.random() * 2) - 1) * BOUNDS.Y_R);
+      this.flyTime = 0;
+      this.targetX = BOUNDS.CENTER_X + (((Math.random() * 2) - 1) * BOUNDS.X_R);
+      this.targetY = BOUNDS.CENTER_Y + (((Math.random() * 2) - 1) * BOUNDS.Y_R);
 
       const angle = Math.random() * 2 * Math.PI;
       this.moveX = Math.cos(angle) * this.speed;
