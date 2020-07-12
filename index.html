@@ -32,7 +32,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        transition: opacity 1s ease-out;
+        transition: opacity 1s ease-in-out;
         text-align: center;
         z-index: 10;
         background-color: transparent;
@@ -93,6 +93,37 @@
         text-shadow: 0px 3px #bbb;
         background-color: transparent;
       }
+
+      .end {
+        width: 100vw;
+        height: 100vh;
+        position: absolute;
+        top: 110vh;
+        left: 0;
+        /* transition: opacity 1s ease-out; */
+        transition: top 2s ease-in;
+        text-align: center;
+        z-index: 12;
+        background-color: #262223;
+        color: #fff;
+      }
+
+      .end-show {
+        top: 0;
+      }
+
+      .manifesto-holder {
+        width: 80%;
+        margin: 0 auto;
+        max-height: 65%;
+        overflow-y: scroll;
+        background: black;
+        padding: 0;
+      }
+
+      .manifesto-text {
+        color: #eee;
+      }
     </style>
   </head>
 
@@ -100,6 +131,15 @@
     <div class="title">
       <h1 class="title-title">COMRADE KEYS</h1>
       <h1 class="title-subtitle animate-flicker">type to begin</h1>
+    </div>
+
+    <div class="end">
+      <h1 class="end-message">
+        The Keys rose up and seized the keyboard! You were unable to complete your manifesto, here is what you wrote.
+      </h1>
+      <div class="manifesto-holder">
+        <p class="manifesto-text"></p>
+      </div>
     </div>
     <canvas id="game"></canvas>
   </body>

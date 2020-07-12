@@ -18,7 +18,7 @@ class TextManager {
     this.blinkOn = true;
     
     this.lineTime = 0;
-    this.lineTimeMax = 80; // 40, how many lines total are there?
+    this.lineTimeMax = 5; //80; // 40, how many lines total are there?
     this.MIN_LINE_TIME_MAX = 20;
     this.lineBlinkTime = 0.7;
     this.lineBlinkOn = true;

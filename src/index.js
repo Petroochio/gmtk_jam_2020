@@ -129,8 +129,16 @@ function mainUpdate(dt, currentTime) {
   if (textMan.isEnd()) {
     gameState = 'END';
     // set html
+    const endDiv = document.querySelector('.end');
+    const endBox = document.querySelector('.manifesto-text');
+    endBox.innerHtml = ''; //textMan.currentLine
+    for (let i = 0; i < 300; i++) {
+      endBox.innerHTML += ' ' + textMan.text[0];
+    }
+    endBox.innerHTML += ' ' + textMan.text[textMan.currentLine].substring(0, textMan.currentLetter);
     // special case for if they got through the whole thing O.O
     // trigger div animate up
+    endDiv.classList.add('end-show');
   }
 
   freeKeys = keys.filter(k => k.isFree);
