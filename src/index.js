@@ -235,10 +235,15 @@ document.addEventListener('keydown', (e) => {
 });
 
 document.addEventListener('keypress', (e) => {
+  e.preventDefault();
+  // e.stopPropagation();
+  // e.stopImmediatePropagation();
   var keynum = e.which;
   var c = String.fromCharCode(keynum).toLowerCase();
-
+  
   if (c === `'`) c = `"`;
+  if (c === ':') c = ';';
+  if (c === '!') c = '1';
   const key = keys.find(k => (k.char === c && !k.isFree && !k.isHeld));
   if (key) textMan.sendKey(e);
 });
