@@ -11,8 +11,8 @@ const KEY_MAP = [
   { char: '8', code: 56, startX: 11 / 20, startY: 14 / 20, spriteX: 0, spriteY: SPRITE_SIZE },
   { char: '9', code: 57, startX: 12 / 20, startY: 14 / 20, spriteX: SPRITE_SIZE * 4, spriteY: SPRITE_SIZE },
   { char: '0', code: 48, startX: 13 / 20, startY: 14 / 20, spriteX: SPRITE_SIZE * 8, spriteY: SPRITE_SIZE },
-  { char: '-', code: 173, startX: 14 / 20, startY: 14 / 20, spriteX: SPRITE_SIZE * 12, spriteY: SPRITE_SIZE },
-  { char: '=', code: 61, startX: 15 / 20, startY: 14 / 20, spriteX: SPRITE_SIZE * 16, spriteY: SPRITE_SIZE },
+  { char: '-', code: 189, startX: 14 / 20, startY: 14 / 20, spriteX: SPRITE_SIZE * 12, spriteY: SPRITE_SIZE },
+  { char: '=', code: 187, startX: 15 / 20, startY: 14 / 20, spriteX: SPRITE_SIZE * 16, spriteY: SPRITE_SIZE },
 
   { char: 'q', code: 81, startX: 4.5 / 20, startY: 14.8 / 20, spriteX: 0, spriteY: SPRITE_SIZE * 3 },
   { char: 'w', code: 87, startX: 5.5 / 20, startY: 14.8 / 20, spriteX: SPRITE_SIZE * 4, spriteY: SPRITE_SIZE * 3 },

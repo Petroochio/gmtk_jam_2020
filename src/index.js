@@ -67,6 +67,7 @@ function drawKeyboard() {
 
   // free keys
   freeKeys.forEach(k => k.draw(ctx, width));
+  textMan.draw(ctx, width);
 
   if (mouseIsHolding) mouseHeldKey.draw(ctx, width);
 }
@@ -163,11 +164,13 @@ function pressKey(code) {
   if (key) key.press();
 }
 
-function liftKey(code) {
+function liftKey(e) {
+  const code = e.keyCode;
+  console.log(e);
   const key = keys.find(k => (k.code === code && !k.isFree));
   if (key) {
     key.lift();
-    textMan.sendKey(key);
+    textMan.sendKey(e);
   }
 }
 
@@ -178,7 +181,7 @@ document.addEventListener('keydown', (e) => {
 
 document.addEventListener('keyup', (e) => {
   // console.log(e);
-  liftKey(e.keyCode);
+  liftKey(e);
 });
 
 window.onload = () => {
