@@ -18,7 +18,7 @@ class TextManager {
     this.blinkOn = true;
     
     this.lineTime = 0;
-    this.lineTimeMax = 70; // 40, how many lines total are there?
+    this.lineTimeMax = 50; // 40, how many lines total are there?
     this.MIN_LINE_TIME_MAX = 15;
     this.lineBlinkTime = 0.7;
     this.lineBlinkOn = true;
@@ -105,7 +105,7 @@ class TextManager {
       this.highlightX = this.leftX;
       this.highlightY += this.LINE_INCREMENT;
 
-      this.lineTimeMax -= 0.5;
+      this.lineTimeMax -= 2;
       if (this.lineTimeMax < this.MIN_LINE_TIME_MAX) this.lineTimeMax = this.MIN_LINE_TIME_MAX;
       this.lineTime = 0;
     }

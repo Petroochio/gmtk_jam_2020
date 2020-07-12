@@ -132,7 +132,7 @@ function mainUpdate(dt, currentTime) {
     const endDiv = document.querySelector('.end');
     const endBox = document.querySelector('.manifesto-text');
     endBox.innerHtml = ''; //textMan.currentLine
-    for (let i = 0; i <text.currentLine; i++) {
+    for (let i = 0; i < textMan.currentLine; i++) {
       endBox.innerHTML += ' ' + textMan.text[i];
     }
     endBox.innerHTML += ' ' + textMan.text[textMan.currentLine].substring(0, textMan.currentLetter);
