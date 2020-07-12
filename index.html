@@ -98,10 +98,10 @@
         width: 100vw;
         height: 100vh;
         position: absolute;
-        top: 110vh;
+        top: -110vh;
         left: 0;
         /* transition: opacity 1s ease-out; */
-        transition: top 2s ease-in;
+        transition: top 1s ease-in;
         text-align: center;
         z-index: 12;
         background-color: #262223;
@@ -112,17 +112,34 @@
         top: 0;
       }
 
+      .end-message {
+        background: transparent;
+margin-top: 5vh;
+font-size: 3vh;
+width: 75%;
+margin: 0 auto;
+    margin-top: 0px;
+margin-top: 5vh;
+      }
+
       .manifesto-holder {
         width: 80%;
-        margin: 0 auto;
-        max-height: 65%;
-        overflow-y: scroll;
-        background: black;
-        padding: 0;
+margin: 0 auto;
+max-height: 65%;
+overflow-y: scroll;
+background: #262223;
+padding: 0;
+margin-top: 10vh;
       }
 
       .manifesto-text {
         color: #eee;
+background: #262223;
+text-align: left;
+      }
+
+      .reset {
+
       }
     </style>
   </head>
@@ -140,6 +157,7 @@
       <div class="manifesto-holder">
         <p class="manifesto-text"></p>
       </div>
+      <button class="reset">play again</button>
     </div>
     <canvas id="game"></canvas>
   </body>

@@ -316,6 +316,10 @@ window.onload = () => {
   });
 }
 
+document.querySelector('.reset').addEventListener('click', () => {
+  location.reload();
+});
+
 window.onresize = () => {
   canvas.width = window.innerHeight * 0.8;
   canvas.height = window.innerHeight * 0.8;
