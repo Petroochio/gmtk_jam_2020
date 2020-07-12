@@ -141,8 +141,8 @@ function mainUpdate(dt, currentTime) {
       document.querySelector('.end-message').innerHTML = "You Finished the Manifesto!"
     }
     // trigger div animate up
-    endDiv.classList.add('end-show');
     endDiv.classList.remove('hidden');
+    setTimeout(() => endDiv.classList.add('end-show'), 100 );
   }
 
   freeKeys = keys.filter(k => k.isFree);

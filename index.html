@@ -88,7 +88,7 @@
 
       .title-subtitle {
         margin-top: 19vh;
-        font-size: 3vh;
+        font-size: 2.5vh;
         color: #9A304D;
         text-shadow: 0px 3px #bbb;
         background-color: transparent;
@@ -112,37 +112,50 @@
       .end-show {
         /* top: 0;
          */
-        opacity: 1;
+        opacity: 0.95;
       }
 
       .end-message {
         background: transparent;
-margin-top: 5vh;
-font-size: 3vh;
-width: 75%;
-margin: 0 auto;
-    margin-top: 0px;
-margin-top: 5vh;
+        margin-top: 5vh;
+        font-size: 3vh;
+        width: 75vh;
+        margin: 0 auto;
+            margin-top: 0px;
+        margin-top: 12vh;
       }
 
       .manifesto-holder {
-        width: 80%;
-margin: 0 auto;
-max-height: 65%;
-overflow-y: scroll;
-background: #262223;
-padding: 0;
-margin-top: 8vh;
+        width: 68vh;
+        margin: 0 auto;
+        max-height: 51vh;
+        overflow-y: scroll;
+        background: #262223;
+        padding: 0;
+        margin-top: 8vh;
+        border-top: 1px #ccc solid;
+padding-top: 5vh;
       }
 
       .manifesto-text {
         color: #eee;
 background: #262223;
 text-align: left;
+font-size: 1.8vh;
       }
 
       .reset {
+        margin-top: 6vh;
+        border: none;
+        padding: 10px;
+        color: black;
+        background: #eee;
+        border-radius: 4px;
+      }
 
+      .reset:hover {
+        background: black;
+        color: #eee;
       }
     </style>
   </head>
@@ -154,9 +167,11 @@ text-align: left;
     </div>
 
     <div class="end hidden">
-      <h1 class="end-message">
-        The Keys rose up and seized the keyboard! You were unable to complete your manifesto, here is what you wrote.
-      </h1>
+      <p class="end-message">
+        The Keys rose up and seized the keyboard! You were unable to complete your manifesto.. 
+        <br><br>
+        Here is what you wrote
+      </p>
       <div class="manifesto-holder">
         <p class="manifesto-text"></p>
       </div>
