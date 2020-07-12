@@ -48,7 +48,7 @@ const KEY_MAP = [
   { char: 'm', code: 77, startX: 11.25 / 20, startY: 16.4 / 20, spriteX: SPRITE_SIZE * 8, spriteY: SPRITE_SIZE * 5 },
   { char: ',', code: 188, startX: 12.25 / 20, startY: 16.4 / 20, spriteX: SPRITE_SIZE * 12, spriteY: SPRITE_SIZE * 5 },
   { char: '.', code: 190, startX: 13.25 / 20, startY: 16.4 / 20, spriteX: SPRITE_SIZE * 16, spriteY: SPRITE_SIZE * 5 },
-  { char: '/', code: 191, startX: 14.25 / 20, startY: 16.4 / 20, spriteX: SPRITE_SIZE * 20, spriteY: SPRITE_SIZE * 5 },
+  { char: '?', code: 191, startX: 14.25 / 20, startY: 16.4 / 20, spriteX: SPRITE_SIZE * 20, spriteY: SPRITE_SIZE * 5 },
 
   // space is a little special
   { char: ' ', code: 32, startX: 9.4 / 20, startY: 17.2 / 20, spriteX: 0, spriteY: SPRITE_SIZE * 6, isSpace: true },

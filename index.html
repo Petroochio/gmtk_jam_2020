@@ -15,15 +15,92 @@
         background-color: #eeeeee;
       }
 
+      body {
+        overflow: hidden;
+        font-family: 'Libre Baskerville', serif;
+      }
+
       #game {
         top: 10vh;
         left: calc(50vw - 40vh);
         position: absolute;
       }
+
+      .title {
+        width: 100vw;
+        height: 100vh;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transition: opacity 1s ease-out;
+        text-align: center;
+        z-index: 10;
+        background-color: transparent;
+      }
+
+      .title-hide {
+        opacity: 0;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .title-title {
+        margin-top: 32vh;
+        font-size: 5.5vh;
+        color:#262223;
+        background-color: transparent;
+        text-shadow: 0px 6px #bbb;
+        
+      }
+
+      @keyframes flickerAnimation {
+        0%   { opacity:1; }
+        30%  { opacity:0; }
+        60%  { opacity: 1; }
+        100% { opacity:1; }
+      }
+      @-o-keyframes flickerAnimation{
+        0%   { opacity:1; }
+        30%  { opacity:0; }
+        60%  { opacity: 1; }
+        100% { opacity:1; }
+      }
+      @-moz-keyframes flickerAnimation{
+        0%   { opacity:1; }
+        30%  { opacity:0; }
+        60%  { opacity: 1; }
+        100% { opacity:1; }
+      }
+      @-webkit-keyframes flickerAnimation{
+        0%   { opacity:1; }
+        30%  { opacity:0; }
+        60%  { opacity: 1; }
+        100% { opacity:1; }
+      }
+      .animate-flicker {
+        -webkit-animation: flickerAnimation 2s infinite;
+        -moz-animation: flickerAnimation 2s infinite;
+        -o-animation: flickerAnimation 2s infinite;
+          animation: flickerAnimation 2s infinite;
+      }
+
+      .title-subtitle {
+        margin-top: 19vh;
+        font-size: 3vh;
+        color: #9A304D;
+        text-shadow: 0px 3px #bbb;
+        background-color: transparent;
+      }
     </style>
   </head>
 
   <body>
+    <div class="title">
+      <h1 class="title-title">COMRADE KEYS</h1>
+      <h1 class="title-subtitle animate-flicker">type to begin</h1>
+    </div>
     <canvas id="game"></canvas>
   </body>
 </html>

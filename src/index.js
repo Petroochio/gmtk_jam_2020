@@ -5,7 +5,7 @@ import KEY_MAP from './KeyMap';
 import Key from './Key';
 import TextManager from './TextManager';
 
-let gameState = 'MAIN';
+let gameState = 'START';
 
 let assets = {};
 let canvas, ctx, width, height;
@@ -63,7 +63,7 @@ function drawKeySlot(k, isOver, isPressed, isFalsePress) {
   ctx.restore();
 }
 
-function drawKeyboard() {
+function drawKeyboard(drawText) {
   keys.forEach(k => {
     drawKeySlot(k.info, k.isOverHome, k.isPressed, k.isFailedPress);
     if (!k.isFree && !k.isHeld) k.draw(ctx, width);
@@ -71,7 +71,7 @@ function drawKeyboard() {
 
   // free keys
   freeKeys.forEach(k => k.draw(ctx, width));
-  textMan.draw(ctx, width);
+  if (drawText) textMan.draw(ctx, width);
 
   if (mouseIsHolding) mouseHeldKey.draw(ctx, width);
 }
@@ -164,7 +164,19 @@ function mainUpdate(dt, currentTime) {
   // ctx.translate(0.5, 0.5);
   // ctx.strokeStyle = '#503a23';
   drawTable();
-  drawKeyboard();
+  drawKeyboard(true);
+  // drawKeys
+  ctx.restore();
+}
+
+function startUpdate(dt) {
+  ctx.fillStyle = '#5F5557';
+  ctx.fillRect(-1,-1, canvas.width + 10, canvas.height + 10);
+  ctx.save();
+  // ctx.translate(0.5, 0.5);
+  // ctx.strokeStyle = '#503a23';
+  drawTable();
+  drawKeyboard(false);
   // drawKeys
   ctx.restore();
 }
@@ -175,6 +187,9 @@ function update() {
   prevTime = currentTime;
 
   switch (gameState) {
+    case 'START':
+      startUpdate(dt);
+      break;
     case 'MAIN':
       mainUpdate(dt, currentTime);
       break;
@@ -204,22 +219,33 @@ function liftKey(e) {
   else if (key) key.falseLift();
 }
 
+function begin() {
+  const titleDiv = document.querySelector('.title')
+  titleDiv.classList.add('title-hide');
+  setTimeout(() => {
+    gameState = 'MAIN'
+    titleDiv.classList.add('hidden');
+  }, 1000);
+}
+
 document.addEventListener('keydown', (e) => {
   // console.log(e);
-  pressKey(e.keyCode);
+  if (gameState === 'MAIN') pressKey(e.keyCode);
+  else if (gameState === 'START') begin();
 });
 
 document.addEventListener('keypress', (e) => {
   var keynum = e.which;
   var c = String.fromCharCode(keynum).toLowerCase();
-  if (c === ':') c = ';';
+
+  if (c === `'`) c = `"`;
   const key = keys.find(k => (k.char === c && !k.isFree && !k.isHeld));
   if (key) textMan.sendKey(e);
 });
 
 document.addEventListener('keyup', (e) => {
   // console.log(e);
-  liftKey(e);
+  if (gameState === 'MAIN') liftKey(e);
 });
 
 window.onload = () => {
