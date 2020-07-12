@@ -36,7 +36,7 @@ class TextManager {
   draw(ctx, canvasSize) {
     ctx.fillStyle = 'rgba(255, 157, 66, 0.5)';
     if (this.blinkOn) ctx.fillRect(this.highlightX * canvasSize, (this.txtY + this.highlightY) * canvasSize, this.TEXT_WIDTH * canvasSize, this.TEXT_SIZE * canvasSize);
-    ctx.font = `${this.TEXT_SIZE * canvasSize}px monospace`;
+    ctx.font = `${this.TEXT_SIZE * canvasSize}px IBM Plex Mono`;
     ctx.save();
     ctx.beginPath();
     ctx.rect(0, 0, canvasSize, this.CUT_OFF * canvasSize);

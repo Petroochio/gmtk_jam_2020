@@ -122,11 +122,7 @@ function drawTable() {
 }
 
 let freeKeys = [];
-function update() {
-  currentTime = Date.now();
-  dt = currentTime - prevTime;
-  prevTime = currentTime;
-
+function mainUpdate(dt, currentTime) {
   textMan.update(dt);
   freeKeys = keys.filter(k => k.isFree);
   keys.forEach(k => {
@@ -162,6 +158,14 @@ function update() {
   drawKeyboard();
   // drawKeys
   ctx.restore();
+}
+
+function update() {
+  currentTime = Date.now();
+  dt = currentTime - prevTime;
+  prevTime = currentTime;
+
+  mainUpdate(dt, currentTime);
 
   requestAnimationFrame(update);
 }
@@ -236,7 +240,7 @@ window.onload = () => {
   });
 
   canvas.addEventListener('mouseup', (e) => {
-    // if (mouseIsHolding) mouseHeldKey.dropKey();
+    if (mouseIsHolding) mouseHeldKey.dropKey();
     mouseIsHolding = false;
     mouseDown = false;
   });
